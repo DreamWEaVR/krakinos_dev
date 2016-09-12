@@ -17,12 +17,12 @@ public class GridRunner : MonoBehaviour {
 		//move to start position on grid
 		transform.position = grid.getTransformPosition(gridNode.position);
 
-		PickANewPath ();
+		//PickANewPath ();
 	}
 
 	float startTime=0;
 	float journeyLength=0;
-	bool idle=true;
+	public bool idle=true;
 	// Update is called once per frame
 	void FixedUpdate () {
 		//lerp to gridTargetNode
@@ -64,28 +64,34 @@ public class GridRunner : MonoBehaviour {
 	}
 
 	void OnMouseDown() {
-//		PickANewPath ();
-	}
+        PickANewPath();
+    }
 
-	void PickANewPath(){
+    void PickANewPath(){
 		idle = false;
 		Node endPathNode = grid.getRandomNode(true);
 		
 		currentPath = new GridPath ();
 		currentPath.find (grid, gridNode, endPathNode);
 		grid.lastGridPath = currentPath;
-//		gridNode = gridTargetNode;
-//		transform.position = grid.getTransformPosition(gridNode.position);
+        //		gridNode = gridTargetNode;
+        //		transform.position = grid.getTransformPosition(gridNode.position);
 
-//		grid.lastGridPath = currentPath;
-//
-//		StartCoroutine (FollowPath ());
+        //		grid.lastGridPath = currentPath;
+        //
+        //		StartCoroutine (FollowPath ());
+
+        //send the path to the line renderer
+        Vector3[] linePath = currentPath.getNodeVectorPositions();
+        //grid.pathRenderer.siz
+        grid.pathRenderer.SetVertexCount(linePath.Length);
+       grid.pathRenderer.SetPositions(linePath);
 	}
 
 	IEnumerator PathComplete() {
 		idle = true;
 		yield return new WaitForSeconds(2f);
-		PickANewPath();
+		//PickANewPath();
 	}
 
 //	IEnumerator FollowPath() {

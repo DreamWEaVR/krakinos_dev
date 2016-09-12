@@ -69,7 +69,15 @@ public class GridPath{
 			}
 		}
 	}
-
+   public  Vector3[] getNodeVectorPositions()
+    {
+        Vector3[] positions = new Vector3[path.Count];
+        for (int i = 0; i<path.Count; i++)
+        {
+            positions[i] = grid.getTransformPosition(path[i].position);
+        }
+        return positions;
+    }
 	void RetracePath(Node _startNode, Node _endNode){
 		path = new List<Node> ();
 		Node currentNode = _endNode;

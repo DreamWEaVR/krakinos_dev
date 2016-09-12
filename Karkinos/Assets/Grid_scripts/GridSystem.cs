@@ -24,6 +24,8 @@ public class GridSystem : MonoBehaviour {
 
 	public int[,,] grid;
 
+    public LineRenderer pathRenderer;
+
 	public Node[,,] nodes;
 	public List<Node> walkableNodes; // when walkables change
 
@@ -83,6 +85,7 @@ public class GridSystem : MonoBehaviour {
 		for (int x = -1; x <= 1; x++) {
 			for (int y = -1; y <= 1 ; y++) {
 				for (int z = -1; z <= 1; z++) {
+                    if (Mathf.Abs(x) + Mathf.Abs(y) + Mathf.Abs(z) == 3) continue; //ignore the corner neightbors
 					if(x==0 && y==0 && z==0) continue;
 					int gX = n.position.x + x;
 					int gY = n.position.y + y;
@@ -117,7 +120,6 @@ public class GridSystem : MonoBehaviour {
 
 	private void OnDrawGizmos () {
 		//show the grid
-		//*
 		if (drawGrid) {
 			if (nodes!=null) {
 				foreach (Node n in nodes) {
@@ -128,31 +130,21 @@ public class GridSystem : MonoBehaviour {
 				}
 			}
 		}
-		float cur = 0;
-		if (Application.isPlaying) {
-			foreach (GridRunner r in runners) {
-				IntVector3 lastPos = r.currentPath.startNode.position;
-				float ratio = cur / (float)runners.Count;
-				Gizmos.color = new Color (.8f, ratio * .7f, 1f - ratio, 1f);
+		//float cur = 0;
+		//if (Application.isPlaying) {
+		//	foreach (GridRunner r in runners) {
+  //              if (r.idle) return;
+		//		IntVector3 lastPos = r.currentPath.startNode.position;
+		//		float ratio = cur / (float)runners.Count;
+		//		Gizmos.color = new Color (.8f, ratio * .7f, 1f - ratio, 1f);
 
-				for (int n = 0; n < r.currentPath.path.Count; n++) {
-					Gizmos.DrawLine (getTransformPosition (lastPos), getTransformPosition (r.currentPath.path [n].position));
-					lastPos = r.currentPath.path [n].position;
-				}
-				cur++;
-			}
-		}
-//		if (lastGridPath != null) {
-//			IntVector3 lastPos = lastGridPath.startNode.position;
-//			for (int n = 0; n < lastGridPath.path.Count; n++) {
-//				Gizmos.color = Color.yellow;
-//
-//				Gizmos.DrawLine(getTransformPosition(lastPos), getTransformPosition(lastGridPath.path[n].position));
-//				lastPos = lastGridPath.path [n].position;
-//			}
-//
-//
-//		}
-		//*/
+		//		for (int n = 0; n < r.currentPath.path.Count; n++) {
+		//			Gizmos.DrawLine (getTransformPosition (lastPos), getTransformPosition (r.currentPath.path [n].position));
+		//			lastPos = r.currentPath.path [n].position;
+		//		}
+		//		cur++;
+		//	}
+		//}
+
 	}
 }
