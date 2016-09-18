@@ -31,6 +31,8 @@ public class GridSystem : MonoBehaviour {
 
 	public bool drawGrid;
 
+    public float worldScale;
+
 	void Awake(){
 		buildGrid ();
 	}
@@ -69,7 +71,7 @@ public class GridSystem : MonoBehaviour {
 		}
 	}
 	public Vector3 getTransformPosition(IntVector3 nodePos){
-		return new Vector3((float)nodePos.x * segmentSize.x, (float)nodePos.y * segmentSize.y, (float)nodePos.z * segmentSize.z) + transform.position;
+		return new Vector3((float)nodePos.x * segmentSize.x, (float)nodePos.y * segmentSize.y, (float)nodePos.z * segmentSize.z) + transform.localPosition;
 	}
 	public Node getNodeForPosition(IntVector3 pos){
 		return nodes[pos.x, pos.y, pos.z];

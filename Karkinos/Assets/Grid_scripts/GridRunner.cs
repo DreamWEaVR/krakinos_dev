@@ -15,10 +15,10 @@ public class GridRunner : MonoBehaviour {
 		gridNode = grid.getRandomNode(true);
 		gridTargetNode = gridNode;
 		//move to start position on grid
-		transform.position = grid.getTransformPosition(gridNode.position);
+		transform.localPosition = grid.getTransformPosition(gridNode.position);
 
-		//PickANewPath ();
-	}
+        PickANewPath();
+    }
 
 	float startTime=0;
 	float journeyLength=0;
@@ -37,17 +37,17 @@ public class GridRunner : MonoBehaviour {
 				nextNode();
 			}else{
 				if(float.IsNaN(fracJourney)) return;
-				transform.position = Vector3.Lerp (grid.getTransformPosition (gridNode.position), grid.getTransformPosition (gridTargetNode.position), fracJourney);
+				transform.localPosition = Vector3.Lerp (grid.getTransformPosition (gridNode.position), grid.getTransformPosition (gridTargetNode.position), fracJourney);
 			}
 		}
 
-		//once there set a new path
-//		StartCoroutine (PathComplete ());
+        //once there set a new path
+        //StartCoroutine(PathComplete());
 
 
-	}
+    }
 
-	void nextNode(){
+    void nextNode(){
 		gridNode = currentPath.path[currentPath.currentIndex];
 		currentPath.currentIndex++;
 
@@ -64,7 +64,7 @@ public class GridRunner : MonoBehaviour {
 	}
 
 	void OnMouseDown() {
-        PickANewPath();
+        //PickANewPath();
     }
 
     void PickANewPath(){
@@ -91,8 +91,8 @@ public class GridRunner : MonoBehaviour {
 	IEnumerator PathComplete() {
 		idle = true;
 		yield return new WaitForSeconds(2f);
-		//PickANewPath();
-	}
+        PickANewPath();
+    }
 
 //	IEnumerator FollowPath() {
 //		//move to next node

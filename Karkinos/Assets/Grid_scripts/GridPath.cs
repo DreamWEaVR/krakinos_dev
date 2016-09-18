@@ -45,7 +45,7 @@ public class GridPath{
 
 			if (currentNode == _endNode) {
 				sw.Stop ();
-				UnityEngine.Debug.Log("PathFound:"+ sw.ElapsedMilliseconds + "ms");
+				//UnityEngine.Debug.Log("PathFound:"+ sw.ElapsedMilliseconds + "ms");
 				//found the end
 				RetracePath( _startNode, _endNode);
 				return;
@@ -90,7 +90,7 @@ public class GridPath{
 		//can call simplify path here to remove extra nodes, could be good for drawing but not for step movement
 		//maybe save a simplified path as well?
 		path.Reverse ();
-		UnityEngine.Debug.Log ("path complete, nodes:"+path.Count);
+		//UnityEngine.Debug.Log ("path complete, nodes:"+path.Count);
 	}
 
 	Node[] SimplifyPath(List<Node> fullPath){
