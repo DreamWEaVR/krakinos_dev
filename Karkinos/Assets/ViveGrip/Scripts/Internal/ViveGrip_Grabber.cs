@@ -5,15 +5,41 @@ public class ViveGrip_Grabber : MonoBehaviour {
   public GameObject jointObject;
   public ConfigurableJoint joint;
 
+
+/*------------------------injects*/
+    void ViveGripAirGrabStart(ViveGrip_GripPoint gripPoint)
+    {
+        Debug.Log("grabber ViveGripAirGrabStart");
+
+        if (gripPoint.airGrabbingTarget != null)
+        {
+            jointObject = InstantiateJointParent();
+            Rigidbody desiredBody = gripPoint.airGrabbingTarget.GetComponent<Rigidbody>();
+            gripPoint.airGrabbingTarget.GetComponent<ViveGrip_Grabbable>().GrabFrom(transform.position);
+            joint = ViveGrip_JointFactory.JointToConnect(jointObject, desiredBody, transform.rotation);
+        }
+
+        
+    }
+    void ViveGripAirGrabStop(ViveGrip_GripPoint gripPoint)
+    {
+        Debug.Log("grabber ViveGripAirGrabStop");
+        Destroy(jointObject);
+    }
+/*--------------------------------------*/
+
   void Start () {}
 
   void ViveGripGrabStart(ViveGrip_GripPoint gripPoint) {
+    Debug.Log("grabber ViveGripGrabStart");
     jointObject = InstantiateJointParent();
     GrabWith(gripPoint);
   }
+    
 
-  void ViveGripGrabStop(ViveGrip_GripPoint gripPoint) {
-    Destroy(jointObject);
+    void ViveGripGrabStop(ViveGrip_GripPoint gripPoint) {
+        Debug.Log("grabber ViveGripGrabStop");
+        Destroy(jointObject);
   }
 
   void GrabWith(ViveGrip_GripPoint gripPoint) {

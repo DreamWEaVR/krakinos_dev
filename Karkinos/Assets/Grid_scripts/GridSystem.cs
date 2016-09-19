@@ -49,7 +49,12 @@ public class GridSystem : MonoBehaviour {
 			for (int y = 0; y < gridSize.y; y++) {
 				for (int z = 0; z < gridSize.z; z++) {
 					IntVector3 pos = new IntVector3 (x, y, z);
-					bool walkable = !( Physics.CheckSphere(getTransformPosition(pos), segmentSize.x*.5f, unwalkableMask) );
+                    //Vector3 localPoint = getTransformPosition(pos);
+                    //Vector3 worldPoint = transform.TransformPoint(localPoint);
+
+                    Vector3 worldPoint = localToWorld(getTransformPosition(pos));
+
+                    bool walkable = !( Physics.CheckSphere(worldPoint, segmentSize.x *.5f * transform.lossyScale.x, unwalkableMask) );
 					nodes[x, y, z] = new Node(walkable, pos);
 				}
 			}
@@ -63,6 +68,11 @@ public class GridSystem : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public Vector3 localToWorld(Vector3 localPoint)
+    {
+        return transform.TransformPoint(localPoint);
+    }
 
 	/*UTILS*/
 	public int MaxSize{
@@ -125,10 +135,19 @@ public class GridSystem : MonoBehaviour {
 		if (drawGrid) {
 			if (nodes!=null) {
 				foreach (Node n in nodes) {
-					if (n.walkable) {
-						Gizmos.color = Color.red;
-						Gizmos.DrawSphere (new Vector3 (n.position.x * segmentSize.x, n.position.y * segmentSize.y, n.position.z * segmentSize.z) + transform.position, 0.05f);
-					}
+                    Vector3 localPoint = getTransformPosition(n.position);
+                    Vector3 worldPoint = transform.TransformPoint(localPoint);
+                    if (n.walkable) {
+						Gizmos.color = Color.blue;
+                        //getTransformPosition
+                        Gizmos.DrawSphere(worldPoint, 0.005f);
+                        //Gizmos.DrawSphere (new Vector3 (n.position.x * segmentSize.x, n.position.y * segmentSize.y, n.position.z * segmentSize.z) + transform.position, 0.05f);
+                    }
+                    else
+                    {
+                        Gizmos.color = Color.green;
+                        Gizmos.DrawSphere(worldPoint, 0.005f);
+                    }
 				}
 			}
 		}

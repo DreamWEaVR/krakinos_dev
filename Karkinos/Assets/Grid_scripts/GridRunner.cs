@@ -17,10 +17,10 @@ public class GridRunner : MonoBehaviour {
 		//move to start position on grid
 		transform.localPosition = grid.getTransformPosition(gridNode.position);
 
-        PickANewPath();
+        //PickANewPath();
     }
 
-	float startTime=0;
+    float startTime=0;
 	float journeyLength=0;
 	public bool idle=true;
 	// Update is called once per frame
@@ -44,7 +44,10 @@ public class GridRunner : MonoBehaviour {
         //once there set a new path
         //StartCoroutine(PathComplete());
 
-
+        if (controller)
+        {
+            controller.Vibrate(50, 0.1f);
+        }
     }
 
     void nextNode(){
@@ -82,11 +85,10 @@ public class GridRunner : MonoBehaviour {
         //		StartCoroutine (FollowPath ());
 
         //send the path to the line renderer
-        Vector3[] linePath = currentPath.getNodeVectorPositions();
-        //grid.pathRenderer.siz
-        grid.pathRenderer.SetVertexCount(linePath.Length);
-       grid.pathRenderer.SetPositions(linePath);
-	}
+        //Vector3[] linePath = currentPath.getNodeVectorPositions();
+        //grid.pathRenderer.SetVertexCount(linePath.Length);
+        //grid.pathRenderer.SetPositions(linePath);
+    }
 
 	IEnumerator PathComplete() {
 		idle = true;
@@ -94,27 +96,23 @@ public class GridRunner : MonoBehaviour {
         PickANewPath();
     }
 
-//	IEnumerator FollowPath() {
-//		//move to next node
-//		gridNode = currentPath.path[currentPath.currentIndex];
-//		transform.position = grid.getTransformPosition(gridNode.position);
-//
-//		currentPath.currentIndex++;
-//		//if out of nodes, wait for a second then 
-//		yield return new WaitForSeconds(.2f);
-//
-//		if (currentPath.currentIndex < currentPath.path.Count) {
-//			StartCoroutine (FollowPath ());
-//		} else {
-//			Debug.Log("completed path");
-//			yield return new WaitForSeconds(2f);
-//			PickANewPath();
-//		}
-////		for (float f = 1f; f >= 0; f -= 0.1f) {
-////			Color c = renderer.material.color;
-////			c.a = f;
-////			renderer.material.color = c;
-////			yield return null;
-////		}
-//	}
+    //SteamVR interaction junks
+
+    private ViveGrip_ControllerHandler controller;
+    void ViveGripInteractionStart(ViveGrip_GripPoint gripPoint)
+    {
+        //if (gripPoint.HoldingSomething())
+        //{
+        //    controller = gripPoint.controller;
+        //}
+        controller = gripPoint.controller;
+        if (idle)
+        {
+            PickANewPath();
+        }
+    }
+    void ViveGripInteractionStop()
+    {
+        controller = null;
+    }
 }

@@ -22,6 +22,10 @@ public class ViveGrip_GripPoint : MonoBehaviour {
   private GameObject lastTouchedObject;
   private GameObject lastInteractedObject;
 
+
+    public bool airGrabbing = false;
+    public GameObject airGrabbingTarget; //target of air grabbing events
+
   void Start() {
     controller = GetComponent<ViveGrip_ControllerHandler>();
     grabber = gameObject.AddComponent<ViveGrip_Grabber>();
@@ -39,6 +43,19 @@ public class ViveGrip_GripPoint : MonoBehaviour {
     lastTouchedObject = touchedObject;
   }
 
+    //public void GrabObject(GameObject givenObject)
+    //{
+    //    Debug.Log("grab object");
+    //    if (givenObject != null)
+    //    {
+    //        //Message("ViveGripHighlightStop", givenObject);
+    //        Message("ViveGripWorldGrab", givenObject);
+    //    }else
+    //    {
+    //        Debug.Log("givenObject == null");
+    //    }
+    //}
+
   void HandleGrabbing(GameObject givenObject) {
     if (!GrabTriggered() && !externalGrabTriggered) { return; }
     externalGrabTriggered = false;
@@ -51,7 +68,12 @@ public class ViveGrip_GripPoint : MonoBehaviour {
     else if (givenObject != null && givenObject.GetComponent<ViveGrip_Grabbable>() != null) {
       Message("ViveGripHighlightStop", givenObject);
       Message("ViveGripGrabStart", givenObject);
-    }
+    }else if (givenObject == null && airGrabbingTarget!=null) {
+        /*--------------------------------------inject*/
+         airGrabbing = true;
+         Message("ViveGripAirGrabStart", airGrabbingTarget);
+        }
+    /*-------------------------------*/
   }
 
   bool GrabTriggered() {
@@ -64,6 +86,7 @@ public class ViveGrip_GripPoint : MonoBehaviour {
 
   void DestroyConnection() {
     firmlyGrabbed = false;
+    Debug.Log("here it stops");
     Message("ViveGripGrabStop", HeldObject());
   }
 
