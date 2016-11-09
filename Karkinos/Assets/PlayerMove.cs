@@ -14,12 +14,15 @@ public class PlayerMove : MonoBehaviour {
 
     public Quaternion playerDragStartRotation;
     public Vector3 playerDragStartPosition;
+    public Vector3 playerStartScale;
 
     public Quaternion pivotDragStartRotation;
     public Vector3 pivotDragStartGPosition;
 
+    
+
     public float startScaleDis = 1;
-    public Vector3 startScale;
+    //public Vector3 startScale;
 
     public float dragAmplifier = 1;
 
@@ -55,8 +58,12 @@ public class PlayerMove : MonoBehaviour {
     {
         if (dragging)
         {
-           // Vector3 dragOffset = localDragStartPosition - dragController.gameObject.transform.localPosition;
-          //  gameObject.transform.position = playerDragStartPosition + dragOffset;
+            //Vector3 dragOffset = localDragStartPosition - dragController.gameObject.transform.localPosition;
+            //gameObject.transform.position = playerDragStartPosition + dragOffset;
+
+            positionPivotObject();
+            Vector3 offset = pivotDragStartGPosition - pivotObject.position;
+            transform.position += offset;
         }
         if (rotating)
         {
@@ -77,8 +84,11 @@ public class PlayerMove : MonoBehaviour {
             {
                 float currentDis = Vector3.Distance(rightController.gameObject.transform.localPosition, leftController.gameObject.transform.localPosition);
                 scaleVal = currentDis / startScaleDis;
-                float targScale = Mathf.Clamp(scaleVal, minScale, maxScale);
-                transform.localScale = startScale / targScale;
+
+                float targScale = Mathf.Clamp(playerStartScale.x / scaleVal, minScale, maxScale);
+
+
+                transform.localScale = new Vector3( targScale, targScale, targScale);
             }
 
             Vector3 offset = pivotDragStartGPosition - pivotObject.position;
@@ -88,13 +98,13 @@ public class PlayerMove : MonoBehaviour {
 
 
 
-            if (hasReported < 2)
-            {
-                Debug.Log("start angle" + pivotDragStartRotation);
-                Debug.Log("controller rotation" + pivotObject.localRotation);
-                Debug.Log("deltaRotation" + deltaRotation);
-                hasReported++;
-            }
+            //if (hasReported < 2)
+            //{
+            //    Debug.Log("start angle" + pivotDragStartRotation);
+            //    Debug.Log("controller rotation" + pivotObject.localRotation);
+            //    Debug.Log("deltaRotation" + deltaRotation);
+            //    hasReported++;
+            //}
 
            // HandleRotation(deltaRotation * playerDragStartRotation );
         }
@@ -138,8 +148,10 @@ public class PlayerMove : MonoBehaviour {
         dragController = sender;
         dragging = true;
         //localDragStartPosition = dragController.gameObject.transform.localPosition;
-       // playerDragStartPosition = gameObject.transform.localPosition;
-       // playerDragStartRotation = gameObject.transform.localRotation;
+        //playerDragStartPosition = gameObject.transform.localPosition;
+        //playerDragStartRotation = gameObject.transform.localRotation;
+        positionPivotObject();
+        pivotDragStartGPosition = pivotObject.position;
     }
     private void startRotating()
     {
@@ -151,6 +163,7 @@ public class PlayerMove : MonoBehaviour {
         //store the player position and rotation
         playerDragStartPosition = gameObject.transform.localPosition;
         playerDragStartRotation = gameObject.transform.localRotation;
+        playerStartScale = gameObject.transform.localScale;
 
         positionPivotObject();
 
@@ -158,7 +171,7 @@ public class PlayerMove : MonoBehaviour {
         pivotDragStartRotation = pivotObject.localRotation;
         pivotDragStartGPosition = pivotObject.position;
 
-        startScale = transform.localScale;
+        //startScale = transform.localScale;
         startScaleDis = Vector3.Distance(rightController.gameObject.transform.localPosition, leftController.gameObject.transform.localPosition);
         //lastYAngle = rotationCenterObject.transform.eulerAngles.y;
         //localDragStartPosition = dragController.gameObject.transform.localPosition;
@@ -170,18 +183,26 @@ public class PlayerMove : MonoBehaviour {
 
     private void positionPivotObject()
     {
-        Vector3 pivotCenter = (rightController.gameObject.transform.localPosition + leftController.gameObject.transform.localPosition) * .5f;
-        pivotObject.localPosition = pivotCenter;
-        //pivotObject.LookAt(rightController.gameObject.transform, rightController.gameObject.transform.up);
-        pivotObject.LookAt(rightController.gameObject.transform, pivotObject.up);
+        if (rotating)
+        {
+            Vector3 pivotCenter = (rightController.gameObject.transform.localPosition + leftController.gameObject.transform.localPosition) * .5f;
+            pivotObject.localPosition = pivotCenter;
+            //pivotObject.LookAt(rightController.gameObject.transform, rightController.gameObject.transform.up);
+            pivotObject.LookAt(rightController.gameObject.transform, gameObject.transform.up);
 
 
 
-        pivotObject.localEulerAngles = new Vector3(
-            pivotObject.localEulerAngles.x * RotationAxis.x,
-            pivotObject.localEulerAngles.y * RotationAxis.y,
-            pivotObject.localEulerAngles.z * RotationAxis.z
-            );
+            pivotObject.localEulerAngles = new Vector3(
+                pivotObject.localEulerAngles.x * RotationAxis.x,
+                pivotObject.localEulerAngles.y * RotationAxis.y,
+                pivotObject.localEulerAngles.z * RotationAxis.z
+                );
+        }
+        if (dragging)
+        {
+            Vector3 pivotCenter = (dragController.gameObject.transform.localPosition);
+            pivotObject.localPosition = pivotCenter;
+        }
     }
 
     private void StopDragging(VRTK_ControllerEvents sender)
