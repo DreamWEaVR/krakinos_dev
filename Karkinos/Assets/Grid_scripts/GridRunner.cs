@@ -11,13 +11,18 @@ public class GridRunner : MonoBehaviour {
 	float speed = 1f;
 	// Use this for initialization
 	void Start () {
-		speed = Random.Range (.4f, 3);
-		gridNode = grid.getRandomNode(true);
-		gridTargetNode = gridNode;
-		//move to start position on grid
-		transform.localPosition = grid.getTransformPosition(gridNode.position);
+		
 
         //PickANewPath();
+    }
+
+    public void randomize()
+    {
+        speed = Random.Range(.4f, 3);
+        gridNode = grid.getRandomNode(true);
+        gridTargetNode = gridNode;
+        //move to start position on grid
+        transform.localPosition = grid.getTransformPosition(gridNode.position);
     }
 
     float startTime=0;
@@ -44,10 +49,10 @@ public class GridRunner : MonoBehaviour {
         //once there set a new path
         //StartCoroutine(PathComplete());
 
-        if (controller)
-        {
-            controller.Vibrate(50, 0.1f);
-        }
+        //if (controller)
+        //{
+        //    controller.Vibrate(50, 0.1f);
+        //}
     }
 
     void nextNode(){
@@ -57,8 +62,9 @@ public class GridRunner : MonoBehaviour {
 		if(currentPath.currentIndex >= currentPath.path.Count){
 //			Debug.Log("path complete wait for new path");
 			gridTargetNode = gridNode;
-			StartCoroutine(PathComplete());
-			return;
+			//StartCoroutine(PathComplete());
+            idle = true;
+            return;
 		}
 		gridTargetNode = currentPath.path[currentPath.currentIndex];
 
@@ -69,7 +75,21 @@ public class GridRunner : MonoBehaviour {
 	void OnMouseDown() {
         //PickANewPath();
     }
+    public void MakeNewPath(Node toNode)
+    {
+        idle = true;
+        currentPath = new GridPath();
+        currentPath.find(grid, gridNode, toNode);
+        Vector3[] linePath = currentPath.getNodeVectorPositions();
+        //grid.pathRenderer.SetVertexCount(linePath.Length);
+        //grid.pathRenderer.SetPositions(linePath);
 
+        grid.vrLine.SetPositions(linePath);
+    }
+    public void TravelPath()
+    {
+        idle = false;
+    }
     void PickANewPath(){
 		idle = false;
 		Node endPathNode = grid.getRandomNode(true);
@@ -85,34 +105,32 @@ public class GridRunner : MonoBehaviour {
         //		StartCoroutine (FollowPath ());
 
         //send the path to the line renderer
-        //Vector3[] linePath = currentPath.getNodeVectorPositions();
-        //grid.pathRenderer.SetVertexCount(linePath.Length);
-        //grid.pathRenderer.SetPositions(linePath);
+        
     }
 
 	IEnumerator PathComplete() {
 		idle = true;
-		yield return new WaitForSeconds(2f);
-        PickANewPath();
+		yield return new WaitForSeconds(.25f);
+        //PickANewPath();
     }
 
     //SteamVR interaction junks
 
-    private ViveGrip_ControllerHandler controller;
-    void ViveGripInteractionStart(ViveGrip_GripPoint gripPoint)
-    {
-        //if (gripPoint.HoldingSomething())
-        //{
-        //    controller = gripPoint.controller;
-        //}
-        controller = gripPoint.controller;
-        if (idle)
-        {
-            PickANewPath();
-        }
-    }
-    void ViveGripInteractionStop()
-    {
-        controller = null;
-    }
+    //private ViveGrip_ControllerHandler controller;
+    //void ViveGripInteractionStart(ViveGrip_GripPoint gripPoint)
+    //{
+    //    //if (gripPoint.HoldingSomething())
+    //    //{
+    //    //    controller = gripPoint.controller;
+    //    //}
+    //    controller = gripPoint.controller;
+    //    if (idle)
+    //    {
+    //        PickANewPath();
+    //    }
+    //}
+    //void ViveGripInteractionStop()
+    //{
+    //    controller = null;
+    //}
 }

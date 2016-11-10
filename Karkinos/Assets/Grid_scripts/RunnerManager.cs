@@ -15,6 +15,9 @@ public class RunnerManager : MonoBehaviour {
             
             runner.transform.parent = baseRunner.transform.parent;
             runner.transform.localScale = baseRunner.transform.localScale;
+
+            runner.randomize();
+
             runners.Add(runner);
         }
     }

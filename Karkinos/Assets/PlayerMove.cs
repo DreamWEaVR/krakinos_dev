@@ -8,6 +8,9 @@ public class PlayerMove : MonoBehaviour {
     public VRTK_ControllerEvents rightController;
 
 
+    public ControlDevice leftDevice;
+    public ControlDevice rightDevice;
+
     public Vector3 localDragStartPosition;
 
    
@@ -34,7 +37,7 @@ public class PlayerMove : MonoBehaviour {
     bool dragging;
     bool rotating;
 
-    int hasReported=0;
+    //int hasReported=0;
 
 
     public Vector3 RotationAxis = new Vector3(1, 1, 1);
@@ -47,6 +50,10 @@ public class PlayerMove : MonoBehaviour {
 
 
     void Start () {
+
+        leftController = leftDevice.controller;
+        rightController = rightDevice.controller;
+
         leftController.TriggerPressed += new ControllerInteractionEventHandler(DoTriggerPressed);
         leftController.TriggerReleased += new ControllerInteractionEventHandler(DoTriggerReleased);
 
@@ -188,7 +195,7 @@ public class PlayerMove : MonoBehaviour {
             Vector3 pivotCenter = (rightController.gameObject.transform.localPosition + leftController.gameObject.transform.localPosition) * .5f;
             pivotObject.localPosition = pivotCenter;
             //pivotObject.LookAt(rightController.gameObject.transform, rightController.gameObject.transform.up);
-            pivotObject.LookAt(rightController.gameObject.transform, gameObject.transform.up);
+            pivotObject.LookAt(rightController.gameObject.transform, pivotObject.transform.up);
 
 
 
@@ -216,12 +223,19 @@ public class PlayerMove : MonoBehaviour {
     private void StopRotating()
     {
         rotating = false;
-        hasReported = 0;
+        //hasReported = 0;
     }
 
     private void DoTriggerPressed(object sender, ControllerInteractionEventArgs e)
     {
         Debug.Log("TRIGGER pressed");
+        ControlDevice device = getController((VRTK_ControllerEvents)sender);
+
+        if(device.hoveredObject != null)
+        {
+            Debug.Log("hovering");
+            return;
+        }
 
         if (dragging)
         {
@@ -232,6 +246,18 @@ public class PlayerMove : MonoBehaviour {
             startDragging((VRTK_ControllerEvents)sender);
         }
  
+    }
+    private ControlDevice getController(VRTK_ControllerEvents sender)
+    {
+        if (leftDevice && leftDevice.controller == sender)
+        {
+            return leftDevice;
+        }
+        if (rightDevice && rightDevice.controller == sender)
+        {
+            return rightDevice;
+        }
+        return null;
     }
 
     private void DoTriggerReleased(object sender, ControllerInteractionEventArgs e)

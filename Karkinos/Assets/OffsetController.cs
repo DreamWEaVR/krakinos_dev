@@ -26,6 +26,5 @@ public class OffsetController : MonoBehaviour {
 		offset = player.getAngle() * offset;
 		markerOffsetEnd.localPosition = markerOffsetStart.localPosition + (offset * player.getScale ());
 
-
 	}
 }

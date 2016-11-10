@@ -25,6 +25,7 @@ public class GridSystem : MonoBehaviour {
 	public int[,,] grid;
 
     public LineRenderer pathRenderer;
+    public VRLineRenderer vrLine;
 
 	public Node[,,] nodes;
 	public List<Node> walkableNodes; // when walkables change
@@ -86,6 +87,39 @@ public class GridSystem : MonoBehaviour {
 	public Node getNodeForPosition(IntVector3 pos){
 		return nodes[pos.x, pos.y, pos.z];
 	}
+
+    public Vector3 getClosestNodePosition(Vector3 localPosition)
+    {
+        //figure out the node
+
+
+
+        Vector3 pos = new Vector3(
+            Mathf.Clamp(localPosition.x, 0, segmentSize.x * gridSize.x),
+            Mathf.Clamp(localPosition.y, 0, segmentSize.y * gridSize.y),
+            Mathf.Clamp(localPosition.z, 0, segmentSize.z * gridSize.z)
+            );
+        IntVector3 nodePos = new IntVector3(
+            (int)Mathf.Round(pos.x / segmentSize.x),
+            (int)Mathf.Round(pos.y / segmentSize.y),
+            (int)Mathf.Round(pos.z / segmentSize.z)
+            );
+        return getTransformPosition(nodePos);
+    }
+    public Node getClosestNode(Vector3 localPosition)
+    {
+        Vector3 pos = new Vector3(
+           Mathf.Clamp(localPosition.x, 0, segmentSize.x * gridSize.x),
+           Mathf.Clamp(localPosition.y, 0, segmentSize.y * gridSize.y),
+           Mathf.Clamp(localPosition.z, 0, segmentSize.z * gridSize.z)
+           );
+        IntVector3 nodePos = new IntVector3(
+            (int)Mathf.Round(pos.x / segmentSize.x),
+            (int)Mathf.Round(pos.y / segmentSize.y),
+            (int)Mathf.Round(pos.z / segmentSize.z)
+            );
+        return getNodeForPosition(nodePos);
+    }
 	//set a position in the grid to a value
 //	public void setGridNode(Vector3 _node, int _value){
 //		grid[(int)_node.x, (int)_node.y, (int)_node.z] = _value;
