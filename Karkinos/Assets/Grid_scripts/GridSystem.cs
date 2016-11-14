@@ -85,7 +85,19 @@ public class GridSystem : MonoBehaviour {
 		return new Vector3((float)nodePos.x * segmentSize.x, (float)nodePos.y * segmentSize.y, (float)nodePos.z * segmentSize.z) + transform.localPosition;
 	}
 	public Node getNodeForPosition(IntVector3 pos){
-		return nodes[pos.x, pos.y, pos.z];
+            if (pos.x > gridSize.x)
+            {
+                pos.x = (int)gridSize.x - 1;
+            }
+            if (pos.y > gridSize.y)
+            {
+                pos.y = (int)gridSize.y - 1;
+            }
+            if (pos.z > gridSize.z)
+            {
+                pos.z = (int)gridSize.z - 1;
+            }
+        return nodes[pos.x, pos.y, pos.z];
 	}
 
     public Vector3 getClosestNodePosition(Vector3 localPosition)
@@ -185,21 +197,5 @@ public class GridSystem : MonoBehaviour {
 				}
 			}
 		}
-		//float cur = 0;
-		//if (Application.isPlaying) {
-		//	foreach (GridRunner r in runners) {
-  //              if (r.idle) return;
-		//		IntVector3 lastPos = r.currentPath.startNode.position;
-		//		float ratio = cur / (float)runners.Count;
-		//		Gizmos.color = new Color (.8f, ratio * .7f, 1f - ratio, 1f);
-
-		//		for (int n = 0; n < r.currentPath.path.Count; n++) {
-		//			Gizmos.DrawLine (getTransformPosition (lastPos), getTransformPosition (r.currentPath.path [n].position));
-		//			lastPos = r.currentPath.path [n].position;
-		//		}
-		//		cur++;
-		//	}
-		//}
-
 	}
 }

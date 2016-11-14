@@ -12,6 +12,7 @@ public class Vessel : MonoBehaviour {
     private Vector3 velocity = Vector3.zero;
 
     public Node lastValidNode;
+    public Node lastAttemptedNode;
     public GridRunner originalRunner;
 
     void Start()
@@ -36,10 +37,13 @@ public class Vessel : MonoBehaviour {
             //localTargPosition = runnerScript.grid.getClosestNodePosition(localTargPosition);
 
             Node targNode = runnerScript.grid.getClosestNode(localTargPosition);
-            if (targNode.walkable == true) {
+            
+            if (targNode.walkable == true && targNode!= lastAttemptedNode) {
+                //make sure it's not already finding the path and that is is walkable
                 lastValidNode = targNode;
                 originalRunner.MakeNewPath(lastValidNode);
             }
+            lastAttemptedNode = targNode;
 
             Vector3 localTargNodePosition = runnerScript.grid.getTransformPosition(lastValidNode.position);
             //snap it to the grid

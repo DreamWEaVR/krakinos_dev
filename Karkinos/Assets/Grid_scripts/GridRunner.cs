@@ -72,31 +72,42 @@ public class GridRunner : MonoBehaviour {
 		journeyLength = Vector3.Distance(grid.getTransformPosition(gridNode.position), grid.getTransformPosition(gridTargetNode.position));
 	}
 
-	void OnMouseDown() {
-        //PickANewPath();
-    }
     public void MakeNewPath(Node toNode)
     {
+        //Debug.Log("MakeNewPath");
         idle = true;
-        currentPath = new GridPath();
-        currentPath.find(grid, gridNode, toNode);
-        Vector3[] linePath = currentPath.getNodeVectorPositions();
+        //currentPath = new GridPath();
+        PathRequestManager.RequestPath(gridNode, toNode, OnPathFound);
+        //currentPath.find(grid, gridNode, toNode);
+        //Vector3[] linePath = currentPath.getNodeVectorPositions();
         //grid.pathRenderer.SetVertexCount(linePath.Length);
         //grid.pathRenderer.SetPositions(linePath);
 
-        grid.vrLine.SetPositions(linePath);
+        //grid.vrLine.SetPositions(linePath);
     }
+
+    public void OnPathFound(GridPath _path, bool pathSuccess)
+    {
+        Debug.Log("OnPathFound");
+        if (pathSuccess)
+        {
+            currentPath = _path;
+            grid.vrLine.SetPositions(currentPath.getNodeVectorPositions());
+        }
+    }
+
     public void TravelPath()
     {
-        idle = false;
+        //idle = false;
+        Debug.Log("TravelPath");
     }
     void PickANewPath(){
-		idle = false;
-		Node endPathNode = grid.getRandomNode(true);
+		//idle = false;
+		//Node endPathNode = grid.getRandomNode(true);
 		
-		currentPath = new GridPath ();
-		currentPath.find (grid, gridNode, endPathNode);
-		grid.lastGridPath = currentPath;
+		//currentPath = new GridPath ();
+		//currentPath.find (grid, gridNode, endPathNode);
+		//grid.lastGridPath = currentPath;
         //		gridNode = gridTargetNode;
         //		transform.position = grid.getTransformPosition(gridNode.position);
 
