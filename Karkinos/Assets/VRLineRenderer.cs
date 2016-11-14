@@ -8,7 +8,7 @@ public class VRLineRenderer : MonoBehaviour {
     public GameObject[] Segments; 
 	// Use this for initialization
 	void Start () {
-	
+		lineSegment.SetActive (false);
 	}
 	
 	// Update is called once per frame
@@ -31,6 +31,7 @@ public class VRLineRenderer : MonoBehaviour {
         for (int i = 0; i < Positions.Length-1; i++)
         {
             GameObject seg = Instantiate(lineSegment);
+			seg.SetActive (true);
             seg.transform.parent = lineSegment.transform.parent;
             float dis = Vector3.Distance(Positions[i], Positions[i + 1]);
             seg.transform.localScale = new Vector3(1f, 1f, dis*.5f);
