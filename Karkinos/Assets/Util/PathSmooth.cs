@@ -42,29 +42,6 @@ public class PathSmooth {
 
 		Vector3 direction;
 
-		//tighten up the path
-//		List<Vector3> tightPoints = new List<Vector3> ();
-//		if (tightness > 0 && tightness<1) {
-//			tightPoints.Add(arrayToRound [0]);
-//			direction = arrayToRound [0] - arrayToRound [1];
-//			for (int i = 1; i < arrayToRound.Length - 1; i++) {
-//				Vector3 last = arrayToRound [i-1];
-//				Vector3 current = arrayToRound [i];
-//				Vector3 next = arrayToRound [i + 1];
-//				Vector3 nextDirection = current - next;
-//
-//				if (nextDirection.normalized != direction.normalized) {
-////				tightPoints.Add (last);
-//					tightPoints.Add (Vector3.Lerp (last, current, 1.0f - tightness));
-//					tightPoints.Add (Vector3.Lerp (current, next, tightness));
-//					direction = nextDirection;
-//				} else {
-//					tightPoints.Add (current);
-//				}
-//
-//			}
-//			arrayToRound = tightPoints.ToArray ();
-//		}
 		if (tightness > 0 && tightness < 1) {
 			arrayToRound = TightenCorners (arrayToRound, tightness);
 		}
@@ -105,9 +82,6 @@ public class PathSmooth {
 
 	//change to tighten corners
 	public static Vector3[] SubdivideLine(Vector3[] arrayToDivide,float maxDistance){
-//		if (maxDistance <= 0.0) {
-//			return arrayToDivide;
-//		}
 
 		List<Vector3> newPoints = new List<Vector3> ();
 
@@ -115,16 +89,7 @@ public class PathSmooth {
 		for (int i = 0; i < arrayToDivide.Length-1; i++) {
 			Vector3 start = arrayToDivide [i];
 			Vector3 end = arrayToDivide [i + 1];
-//			float dis = Vector3.Distance (start, end);
-//			if (dis > maxDistance) {
-//				int divisions = (int)Mathf.Ceil (dis / maxDistance);
-//				for (int s = 0; s < divisions; s++) {
-//					newPoints.Add (Vector3.Lerp (start, end, s / divisions));
-//				}
-//
-//			} else {
-//				newPoints.Add (arrayToDivide [i]);
-//			}
+
 			float tightness = .1f;
 			newPoints.Add (start);
 			newPoints.Add (Vector3.Lerp (start, end, tightness));
@@ -141,14 +106,19 @@ public class PathSmooth {
 	public static Vector3[] TightenCorners(Vector3[] arrayToDivide,float tightness){
 		List<Vector3> newPoints = new List<Vector3> ();
 
-		//loop through each point get the distance
-		for (int i = 0; i < arrayToDivide.Length-1; i++) {
-			Vector3 start = arrayToDivide [i];
-			Vector3 end = arrayToDivide [i + 1];
+        //loop through each point get the distance
+        newPoints.Add(arrayToDivide[0]);
 
-			newPoints.Add (start);
-			newPoints.Add (Vector3.Lerp (start, end, tightness));
-			newPoints.Add (Vector3.Lerp (start, end, 1.0f-tightness));
+        for (int i = 1; i < arrayToDivide.Length-1; i++) {
+            Vector3 last = arrayToDivide[i - 1];
+
+            Vector3 current = arrayToDivide [i];
+			Vector3 next = arrayToDivide [i + 1];
+
+            newPoints.Add(Vector3.Lerp(last, current, 1.0f - tightness));
+            newPoints.Add (current);
+			
+			newPoints.Add (Vector3.Lerp (current, next, tightness));
 
 		}
 		newPoints.Add (arrayToDivide[arrayToDivide.Length-1]);
