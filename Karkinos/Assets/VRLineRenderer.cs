@@ -17,6 +17,10 @@ public class VRLineRenderer : MonoBehaviour {
 	}
     private void clear()
     {
+/*
+TODO optomize this so we aren't constantly creating and destroying
+save them and just hide them, when moer get add build them
+*/
         for(int i =0; i<Segments.Length; i++)
         {
             Destroy(Segments[i]); //maybe don't clear out segments, just hide
