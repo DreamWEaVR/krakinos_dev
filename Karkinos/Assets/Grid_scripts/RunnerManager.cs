@@ -9,10 +9,15 @@ public class RunnerManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         runners = new List<GridRunner>();
-        for(int i =0; i<runnerCount; i++)
+        //makeRandomRunners();
+        baseRunner.SnapToNode();
+    }
+    void makeRandomRunners()
+    {
+        for (int i = 0; i < runnerCount; i++)
         {
             GridRunner runner = (GridRunner)Instantiate(baseRunner, baseRunner.transform.position, Quaternion.identity);
-            
+
             runner.transform.parent = baseRunner.transform.parent;
             runner.transform.localScale = baseRunner.transform.localScale;
 

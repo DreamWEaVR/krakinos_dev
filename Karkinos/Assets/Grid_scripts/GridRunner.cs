@@ -16,6 +16,13 @@ public class GridRunner : MonoBehaviour {
         //PickANewPath();
     }
 
+    public void SnapToNode()
+    {
+        gridNode = grid.getClosestNode(transform.localPosition);
+        gridTargetNode = gridNode;
+        transform.localPosition = grid.getTransformPosition(gridNode.position);
+    }
+
     public void randomize()
     {
         speed = Random.Range(.4f, 3);
